@@ -22,20 +22,44 @@
  	  	<rect y = "25" x = "20" width="50" height="20" fill="green"/>
  	  	<rect y="50" x="20" width="50" height="20" fill="blue"/>
  	  </svg>
+    <svg height="1000" width = "1000" radius = "400" id = "pieChartContainer">
+
+    </svg>
       <script>
       	let data1 = [4, 30, 7, 18, 4, 9, 100, 67]
       	let height = 25
+        // make text change color over the course of 5 seconds
       	d3.select(".yep").transition().style("color", "green").duration(5000)
+        // display a list of all the data
       	d3.select("#dataList").selectAll("li").data(data1).text(d => d + " things").enter().append("li").text(d => d+ " another one")
+        // add more text
         d3.select(".yep").append("div").html("<i>are you out there?</i>").attr("style", "font-size: 15px; color: blue").classed("areyouthere", true)
+        // make a button that removes the last item on the list
         let remove = () => {
         	data1.pop()
         	d3.selectAll("#dataList > li").data(data1).exit().remove()
         }
+        // make a bar graph
         d3.select("#svgContainer").selectAll("rect").attr("fill", "purple")
         let svg = d3.select("#svgContainer").attr("height", data1.length*height)
         svg.selectAll("rect").data(data1).attr("width", d => d*5).enter().append("rect").attr("y", (d, index) => index*25).attr("height", 20).attr("width", d => d*5).attr("x", 20).attr("fill", "purple")
-        // svg.selectAll("text").data(data1).enter().append("text").attr("y", (d, index) => 15+index*25).attr("x", d => 20+d*5/2).text(d => d + " things").attr("fill", "lightblue")
+        svg.selectAll("text").data(data1).enter().append("text").attr("y", (d, index) => 15+index*25).attr("x", d => 20+d*5/2).text(d => d + " things").attr("fill", "lightblue")
+        // make a pie chart
+        let rawdata2 = [4, 50, 20, 8]
+        // let pie = d3.pie()
+        let sum = rawdata2.reduce((total, number) => total + number)
+        let total = 0
+        let data2 = rawdata2.map((number, index) => {
+          total += (number/sum)*2*Math.PI
+          return {data: number, index: index, endAngle: total, startAngle: total - (number/sum)*2*Math.PI, value: Math.round(((number/sum)*100))}
+        })
+        console.log(data2[0].value)
+        let colors = ["red","purple","yellow","green"]
+        let circleContainer = d3.select("#pieChartContainer")
+        let arcMaker = d3.arc().innerRadius(0).outerRadius(150)
+        circleContainer.selectAll(".arc").data(data2).enter().append("g").classed(".arc", true).append("path").attr("d", arcMaker).attr("fill", (d, i) => colors[i])
+        circleContainer.selectAll("g").data(data2).attr("transform", "translate(200, 200)").append("text").attr("x", (d, i) => i*25).text(d => d.value + "%")
+        
       </script>
    </body>
 </html>

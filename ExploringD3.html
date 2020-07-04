@@ -73,7 +73,10 @@
         let lineMaker = d3.line().x(d => x(d.x)).y(d => y(d.y))
         lineGraph = d3.select("#lineChartContainer").append("g").attr("transform", "translate(25, 20)")
         lineGraph.append("path").data(lineData).classed("line", true).attr("d", lineMaker(lineData))
-        // lineGraph.append("g").attr("transform", "translate(0, 650)").call(d3.axisBottom(lineData))
+        // lineGraph.append("line").attr("x1", 0).attr("y1", 10).attr("x2", 0).attr("y2", 600).attr("stroke-width", "5px").attr("stroke", "blue")
+        // lineGraph.append("line").attr("x1", 0).attr("y1", 600).attr("x2", 600).attr("y2", 600).attr("stroke-width", "5px").attr("stroke", "blue")
+        lineGraph.append("g").attr("transform", "translate(0, 600)").call(d3.axisBottom(x))
+        lineGraph.append("g").call(d3.axisLeft(y))
       </script>
    </body>
 </html>
